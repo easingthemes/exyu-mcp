@@ -1,0 +1,16 @@
+works:
+  - title: "Valter brani Sarajevo"
+    year: 1972
+    wikidata_qid: null # TODO: look up on wikidata.org before running the real vertical slice
+  - title: "Maratonci trče počasni krug"
+    year: 1982
+    wikidata_qid: null
+  - title: "Ko to tamo peva"
+    year: 1980
+    wikidata_qid: null
+  - title: "Balkanski špijun"
+    year: 1984
+    wikidata_qid: null
+  - title: "Top lista nadrealista"
+    year: 1984
+    wikidata_qid: null
