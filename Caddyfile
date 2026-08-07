@@ -1,3 +1,11 @@
 {$EXYU_DOMAIN:localhost} {
 	reverse_proxy app:8787
+
+	rate_limit {
+		zone dynamic {
+			key {remote_host}
+			events 30
+			window 1m
+		}
+	}
 }
