@@ -1,0 +1,4 @@
+# tests/fixtures/invalid-record.yaml
+id: not-a-valid-id-format
+source_type: movie
+canonical_text: "missing required fields on purpose"
