@@ -5,8 +5,8 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { parse } from 'yaml';
 import { join } from 'node:path';
 
-const ajv = new Ajv({ allErrors: true, strict: true });
-addFormats(ajv);
+const ajv = new (Ajv as any)({ allErrors: true, strict: true });
+(addFormats as any)(ajv);
 
 let validate: ReturnType<typeof ajv.compile>;
 
