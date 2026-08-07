@@ -39,9 +39,24 @@ If the answer is no, it is out of scope — no matter how easy or clean the sour
 | [`08-schema-archetypes.md`](08-schema-archetypes.md) | Validate "same schema, new rows" against 4 archetypes **before** locking the schema |
 | [`09-risks-and-licensing.md`](09-risks-and-licensing.md) | The MVP-killers (tool-never-called, takedown, shrinking moat), licensing tiers, non-goals |
 
+## Scope of this repo
+
+This project is scoped to **cultural reference resolution only** — factual,
+citable, safe-by-construction. We ship the data/MCP and let host platforms
+decide to adopt it; we earn that by transparent sourcing, not by asking
+permission.
+
+**Out of scope here:** shaping *how* a model talks (tone, directness,
+swearing as normal register). That's a willingness problem, not a knowledge
+gap, and needs a different delivery mechanism than an MCP call into someone
+else's chat app. Planned as a separate future project — a skills/harness
+layer for a custom chat app or direct API use. Not started.
+
 ## Status
 
 Greenfield. This folder is design/brainstorming only — no data, no code yet.
-Copyright posture for now: **bold on short quotes + transformative enrichment;
-never commit raw subtitle/lyrics corpora to the repo** (a takedown would kill the
-hosted endpoint the whole project depends on).
+Copyright posture for now: **bold on short quotes + transformative enrichment,
+treated as solved for the current phase**; never commit raw subtitle/lyrics
+corpora to the repo (a takedown would kill the hosted endpoint the whole
+project depends on). See [`09`](09-risks-and-licensing.md) for the full
+tier analysis to revisit later.
