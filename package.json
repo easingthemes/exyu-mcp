@@ -11,7 +11,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "start": "node dist/server/http.js",
+    "start": "node dist/src/server/http.js",
     "dev": "tsx src/server/http.ts",
     "migrate": "tsx src/db/migrate.ts",
     "validate": "tsx src/ingest/validate.ts",
