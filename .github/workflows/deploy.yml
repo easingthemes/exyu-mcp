@@ -19,5 +19,5 @@ jobs:
           script: |
             cd ${{ secrets.HETZNER_DEPLOY_PATH }}
             git pull origin main
-            docker compose run --rm app npm run migrate
+            docker compose run --build --rm app npm run migrate
             docker compose up -d --build
