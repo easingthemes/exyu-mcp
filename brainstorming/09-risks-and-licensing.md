@@ -4,6 +4,15 @@ The plan docs are optimistic by design. This one is the counterweight: the
 things that can kill the project, stated plainly, so no decision is made without
 them in view. Three of these are load-bearing.
 
+## Current-phase posture on Risk 2 (2026-08-07)
+
+Copyright caution is **intentionally deferred for the current phase**. There's
+no way around ingesting copyrighted subtitles/lyrics for the payload this
+project needs, and gating design on it stalls everything. Decision: go bold on
+short-quote usage now, treat it as solved, and build. The tier analysis below
+stays as the honest accounting for when this needs a real answer — before any
+wide/public distribution of the hosted endpoint — not as a gate on current work.
+
 ---
 
 ## Risk 1 — The tool never gets called (MVP-killer)
