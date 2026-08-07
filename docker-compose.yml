@@ -1,0 +1,16 @@
+# docker-compose.yml
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: exyu
+      POSTGRES_USER: exyu
+      POSTGRES_PASSWORD: exyu
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  db_data:
