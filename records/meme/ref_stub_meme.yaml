@@ -1,0 +1,26 @@
+id: ref_stub_meme_template
+source_type: meme
+canonical_text: "[template caption placeholder]"
+normalized_text: "template caption placeholder"
+variants: []
+work: null
+function: template_caption
+meaning: >
+  A reaction-image template whose caption references a well-known film
+  scene; demonstrates a meme record that is its own object but links back
+  to a film record via a DERIVED_FROM edge.
+emotional_tone: [ironic]
+modern_usage: >
+  Reused across ex-YU social media as a reaction image.
+cultural_weight: null
+signals: {}
+gap_score: null
+related:
+  - { rel_type: DERIVED_FROM, ref: ref_valter_vazduh_trepti }
+sources:
+  - source_id: manual_stub
+    source_type: internal
+    license: internal
+    retrieved_at: "2026-08-07"
+    confidence: low
+    field: meaning
