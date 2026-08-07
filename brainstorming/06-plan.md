@@ -12,17 +12,23 @@ Claude/ChatGPT chat and get back the fully-resolved record from
 
 ## Phase 0 — Foundations (skeleton + decisions, no payload yet)
 
-1. **Lock the schema.** Turn the `05` YAML into a validated JSON Schema. The
-   record *is* the spec.
-2. **Stand up storage.** Postgres + pgvector + `tsvector` (FTS) + `pg_trgm`
+1. **Validate schema generalization first.** Before locking anything, populate
+   the **four archetype records** from [`08`](08-schema-archetypes.md) (film line,
+   song lyric, slang word, meme) and confirm one schema holds all four. This is
+   the "same schema, new rows" bet — test it now, not in Phase 5.
+2. **Lock the schema.** Turn the archetype-validated YAML into a validated JSON
+   Schema. `source_type` open, `function` open vocab, `work` nullable and able to
+   reference a Wikidata QID *or* a MusicBrainz MBID, optional typed extension
+   block per `source_type`.
+3. **Stand up storage.** Postgres + pgvector + `tsvector` (FTS) + `pg_trgm`
    (fuzzy). One database, no second store.
-3. **Wikidata skeleton.** Reconcile ex-YU films/people/characters to QIDs.
+4. **Wikidata skeleton.** Reconcile ex-YU films/people/characters to QIDs.
    Contributes IDs + grounding only, zero content.
-4. **Pick the canonical corpus.** ~10 cult films (*Valter*, *Maratonci*, *Ko to
+5. **Pick the canonical corpus.** ~10 cult films (*Valter*, *Maratonci*, *Ko to
    tamo peva*, *Balkanski špijun*, *Top lista nadrealista*, …). This bounds Phase 1.
 
-*Done when:* schema validates the Vazduh record; the 10 works exist as skeleton
-rows with QIDs.
+*Done when:* one schema validates all four archetypes (incl. the Vazduh record);
+the 10 works exist as skeleton rows with QIDs.
 
 ## Phase 1 — Vertical slice (one film, end to end, by hand)
 

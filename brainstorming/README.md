@@ -18,6 +18,13 @@ wording, attribution, context, and modern usage that models *lack* and
 
 If the answer is no, it is out of scope — no matter how easy or clean the source.
 
+> **Refinement (see [`07`](07-durable-moat.md)):** "the gap" is how we decide
+> *what to build next* — it is the compass, not the treasure. The value that
+> *survives* models catching up is the structural layer: provenance, exact
+> timestamps, live social signals, variant resolution, graph edges, and
+> transformative enrichment. Don't make "N references the model gets wrong"
+> (a number designed to shrink) the product's reason to exist.
+
 ## Documents
 
 | File | What it covers |
@@ -27,6 +34,10 @@ If the answer is no, it is out of scope — no matter how easy or clean the sour
 | [`03-gap-scoring.md`](03-gap-scoring.md) | The mechanism that keeps us honest: probe the model, ingest its failures |
 | [`04-subtitle-pipeline.md`](04-subtitle-pipeline.md) | Turning noisy subtitles (the primary payload) into clean records |
 | [`05-example-record.md`](05-example-record.md) | One finished entry, fully populated, to design the pipeline backward from |
+| [`06-plan.md`](06-plan.md) | The step-by-step, dependency-ordered plan to the MVP |
+| [`07-durable-moat.md`](07-durable-moat.md) | Why gap-score is the **compass, not the product** — what keeps value after models catch up |
+| [`08-schema-archetypes.md`](08-schema-archetypes.md) | Validate "same schema, new rows" against 4 archetypes **before** locking the schema |
+| [`09-risks-and-licensing.md`](09-risks-and-licensing.md) | The MVP-killers (tool-never-called, takedown, shrinking moat), licensing tiers, non-goals |
 
 ## Status
 
