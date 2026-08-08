@@ -8,7 +8,11 @@ CREATE TABLE works (
   title TEXT NOT NULL,
   year INTEGER,
   wikidata_qid TEXT,
-  musicbrainz_mbid TEXT
+  musicbrainz_mbid TEXT,
+  -- (title, year) is the natural key the ingester upserts on. NULLS NOT DISTINCT
+  -- (PG15+) so works without a year still dedupe instead of inserting a fresh
+  -- orphaned row on every re-ingest.
+  UNIQUE NULLS NOT DISTINCT (title, year)
 );
 
 CREATE TABLE refs (
@@ -26,6 +30,11 @@ CREATE TABLE refs (
   enrichment JSONB,
   signals JSONB,
   gap JSONB,
+  -- Dimension is tied to the default embedding provider/model
+  -- (OpenAI text-embedding-3-small = 1536). If EMBEDDING_PROVIDER is switched to a
+  -- model with a different dimension (voyage-3 = 1024, local models arbitrary), this
+  -- column must be altered to match. `EXPECTED_EMBEDDING_DIM` in
+  -- src/providers/embedding.ts guards this at runtime.
   embedding vector(1536),
   search_tsv tsvector GENERATED ALWAYS AS (to_tsvector('simple', canonical_text)) STORED
 );

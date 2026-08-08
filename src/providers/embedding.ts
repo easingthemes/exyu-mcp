@@ -2,6 +2,28 @@ export interface EmbeddingProvider {
   embed(text: string): Promise<number[]>;
 }
 
+/**
+ * Dimension of the `refs.embedding` column (`vector(1536)` in
+ * db/migrations/001_init.sql), which matches the default OpenAI
+ * `text-embedding-3-small` model.
+ *
+ * The column dimension is not parameterized for the MVP, so a provider swap
+ * (voyage-3 = 1024, local models arbitrary) would otherwise fail with a cryptic
+ * Postgres error — or, for the query side, silently skew results. Callers assert
+ * against this constant right after `embed()`.
+ */
+export const EXPECTED_EMBEDDING_DIM = 1536;
+
+export function assertEmbeddingDimension(embedding: number[]): void {
+  if (embedding.length !== EXPECTED_EMBEDDING_DIM) {
+    throw new Error(
+      `Embedding dimension mismatch: got ${embedding.length}, expected ${EXPECTED_EMBEDDING_DIM} ` +
+        `(column is vector(${EXPECTED_EMBEDDING_DIM}) — see db/migrations/001_init.sql). ` +
+        `If you're switching EMBEDDING_PROVIDER, you must also alter the embedding column's dimension.`
+    );
+  }
+}
+
 class OpenAIEmbeddingProvider implements EmbeddingProvider {
   async embed(text: string): Promise<number[]> {
     const res = await fetch('https://api.openai.com/v1/embeddings', {
