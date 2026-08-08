@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://exyu-mcp/schema/reference.schema.json",
+  "type": "object",
+  "required": ["id", "source_type", "canonical_text", "normalized_text", "variants", "function", "sources"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^ref_[a-z0-9_]+$" },
+    "source_type": { "type": "string", "minLength": 1 },
+    "canonical_text": { "type": "string", "minLength": 1 },
+    "normalized_text": { "type": "string", "minLength": 1 },
+    "variants": { "type": "array", "items": { "type": "string" } },
+    "work": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "required": ["title"],
+          "additionalProperties": false,
+          "properties": {
+            "title": { "type": "string" },
+            "year": { "type": "integer" },
+            "wikidata_qid": { "type": ["string", "null"] },
+            "release": { "type": "string" },
+            "musicbrainz_mbid": { "type": ["string", "null"] }
+          }
+        }
+      ]
+    },
+    "function": { "type": "string", "minLength": 1 },
+    "extension": {
+      "type": "object",
+      "properties": {
+        "call_response": {
+          "type": "object",
+          "required": ["sign", "countersign"],
+          "properties": {
+            "sign": { "type": "string" },
+            "countersign": { "type": "string" }
+          }
+        },
+        "performer": { "type": "string" },
+        "line_index": { "type": "integer" }
+      }
+    },
+    "speaker": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "required": ["name", "confidence"],
+          "properties": {
+            "name": { "type": "string" },
+            "confidence": { "enum": ["low", "medium", "high"] }
+          }
+        }
+      ]
+    },
+    "timestamp_start": { "type": ["string", "null"] },
+    "timestamp_end": { "type": ["string", "null"] },
+    "meaning": { "type": "string" },
+    "emotional_tone": { "type": "array", "items": { "type": "string" } },
+    "modern_usage": { "type": "string" },
+    "cultural_weight": { "type": ["number", "null"] },
+    "signals": { "type": "object" },
+    "gap_score": { "type": ["number", "null"] },
+    "gap_notes": { "type": "string" },
+    "related": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["rel_type"],
+        "properties": {
+          "rel_type": { "type": "string" },
+          "ref": { "type": "string" },
+          "note": { "type": "string" }
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["source_id", "source_type", "license", "retrieved_at", "confidence", "field"],
+        "properties": {
+          "source_id": { "type": "string" },
+          "source_type": { "type": "string" },
+          "url": { "type": "string" },
+          "license": { "type": "string" },
+          "retrieved_at": { "type": "string", "format": "date" },
+          "confidence": { "enum": ["low", "medium", "high"] },
+          "field": {
+            "oneOf": [{ "type": "string" }, { "type": "array", "items": { "type": "string" } }]
+          }
+        }
+      }
+    }
+  }
+}

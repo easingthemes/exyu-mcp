@@ -1,0 +1,10 @@
+# CI-only overlay for the Compose-level HTTP integration test.
+# Production keeps `app` unpublished behind Caddy; the smoke test drives /mcp
+# directly from the runner, so it needs the port on the host.
+services:
+  app:
+    ports:
+      - "8787:8787"
+  db:
+    ports:
+      - "5432:5432"

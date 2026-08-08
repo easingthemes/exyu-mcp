@@ -1,0 +1,31 @@
+id: ref_stub_song_refrain
+source_type: music
+canonical_text: "[refrain text withheld - Red tier, see brainstorming/09]"
+normalized_text: "refrain text withheld"
+variants: []
+work:
+  title: "example ex-YU rock release"
+  release: "example ex-YU rock release"
+  musicbrainz_mbid: null
+function: refrain
+extension:
+  performer: "example performer"
+  line_index: 1
+meaning: >
+  A commonly misremembered refrain from a well-known ex-YU rock song; the
+  verbatim line is withheld here per the Red-tier lyric posture in
+  brainstorming/09-risks-and-licensing.md — this record demonstrates the
+  schema stays useful with the verbatim text omitted.
+emotional_tone: [nostalgic]
+modern_usage: >
+  Quoted ironically in everyday conversation to signal resignation.
+cultural_weight: null
+signals: {}
+gap_score: null
+sources:
+  - source_id: manual_stub
+    source_type: internal
+    license: internal
+    retrieved_at: "2026-08-07"
+    confidence: low
+    field: meaning

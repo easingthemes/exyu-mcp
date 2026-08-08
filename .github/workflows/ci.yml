@@ -1,0 +1,79 @@
+# .github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+
+  compose-http:
+    # Compose-level HTTP integration test from the design spec's Testing section.
+    # CI has no embedding-provider credentials, so the DB is seeded directly with SQL
+    # instead of running the real ingest CLI, and EMBEDDING_PROVIDER is pointed at an
+    # unconfigured `local` provider. That keeps the job hermetic while still proving
+    # the thing only this job can prove: a real MCP client can complete
+    # initialize -> tools/list -> tools/call against the running container over HTTP.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+
+      - name: Write CI .env
+        run: |
+          cp .env.example .env
+          # No embedding credentials in CI: an unconfigured `local` provider fails fast
+          # and offline, exercising the cascade's graceful-degradation path.
+          sed -i 's/^EMBEDDING_PROVIDER=.*/EMBEDDING_PROVIDER=local/' .env
+
+      - name: Start db + app
+        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml up -d --build db app
+
+      - name: Wait for Postgres
+        run: |
+          for i in $(seq 1 60); do
+            if docker compose exec -T db pg_isready -U exyu -d exyu; then exit 0; fi
+            sleep 2
+          done
+          echo "Postgres never became ready"; exit 1
+
+      - name: Run migrations (same command as deploy.yml)
+        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm app npm run migrate
+
+      - name: Seed a fixture record
+        run: docker compose exec -T db psql -v ON_ERROR_STOP=1 -U exyu -d exyu < tests/fixtures/ci-seed.sql
+
+      - name: Wait for /health
+        run: |
+          for i in $(seq 1 60); do
+            if curl -fsS http://localhost:8787/health; then echo; exit 0; fi
+            sleep 2
+          done
+          echo "app /health never responded"; docker compose logs app; exit 1
+
+      - name: MCP round-trip over real HTTP
+        run: npx tsx scripts/smoke-http.ts http://localhost:8787
+
+      - name: Dump app logs on failure
+        if: failure()
+        run: docker compose logs app db
+
+      - name: Tear down
+        if: always()
+        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml down -v

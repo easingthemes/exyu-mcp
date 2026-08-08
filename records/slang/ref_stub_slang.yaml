@@ -1,0 +1,24 @@
+id: ref_stub_slang_term
+source_type: slang
+canonical_text: "cimer"
+normalized_text: "cimer"
+variants:
+  - "cimerka"
+  - "cimerica"
+work: null
+function: set_phrase
+meaning: >
+  Roommate or flatmate; borrowed and reshaped from German "Zimmer" (room).
+emotional_tone: [neutral, colloquial]
+modern_usage: >
+  Standard informal word for a roommate across ex-YU student/urban slang.
+cultural_weight: null
+signals: {}
+gap_score: null
+sources:
+  - source_id: manual_stub
+    source_type: internal
+    license: internal
+    retrieved_at: "2026-08-07"
+    confidence: low
+    field: meaning
