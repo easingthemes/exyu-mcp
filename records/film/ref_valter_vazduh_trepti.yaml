@@ -1,0 +1,39 @@
+id: ref_valter_vazduh_trepti
+source_type: movie
+canonical_text: "Vazduh trepti, kao da nebo gori."
+normalized_text: "vazduh trepti kao da nebo gori"
+variants:
+  - "Vazduh gori ko da..."
+  - "Vazduh treperi kao da nebo gori"
+work:
+  title: "Valter brani Sarajevo"
+  year: 1972
+  wikidata_qid: null
+function: recognition_code
+extension:
+  call_response:
+    sign: "Vazduh trepti, kao da nebo gori."
+    countersign: "unverified - fill in from subtitle track in Task 16"
+speaker:
+  name: "unknown"
+  confidence: low
+timestamp_start: null
+timestamp_end: null
+meaning: >
+  A partizan recognition password used to identify contacts. The imagery
+  signals imminent danger.
+emotional_tone: [tense, ominous]
+modern_usage: >
+  Used today as a stock set-phrase for "something dramatic is brewing."
+cultural_weight: null
+signals: {}
+gap_score: null
+related:
+  - { rel_type: SAME_THEME, note: "partizan recognition codes" }
+sources:
+  - source_id: yugonostalgia
+    source_type: culture_site
+    license: unknown
+    retrieved_at: "2026-08-07"
+    confidence: low
+    field: work
