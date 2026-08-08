@@ -1,8 +1,9 @@
+import 'dotenv/config';
 import { readFileSync } from 'node:fs';
 import { parse } from 'yaml';
 import pg from 'pg';
 import { validateRecord } from './validate.js';
-import { resolveWork, type WorkSkeletonEntry } from './resolveWork.js';
+import { resolveWork, loadSkeleton, type WorkSkeletonEntry } from './resolveWork.js';
 import type { EmbeddingProvider } from '../providers/embedding.js';
 
 export interface LoadDeps {
@@ -92,4 +93,43 @@ export async function loadRecord(filePath: string, deps: LoadDeps): Promise<{ re
   }
 
   return { refId };
+}
+
+// CLI: `npm run ingest -- <file.yaml> [<file.yaml> ...]`
+// Requires DATABASE_URL and working credentials for the configured EMBEDDING_PROVIDER.
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const files = process.argv.slice(2);
+  if (files.length === 0) {
+    console.error('Usage: npm run ingest -- <record.yaml> [<record.yaml> ...]');
+    process.exit(1);
+  }
+
+  const { getPool } = await import('../db/pool.js');
+  const { createEmbeddingProvider } = await import('../providers/embedding.js');
+
+  const pool = getPool();
+  const deps: LoadDeps = {
+    db: pool,
+    embedder: createEmbeddingProvider(),
+    skeleton: loadSkeleton('skeleton/works.yaml')
+  };
+
+  let failures = 0;
+  try {
+    for (const file of files) {
+      try {
+        const { refId } = await loadRecord(file, deps);
+        console.log(`ok    ${file} -> refs.id=${refId}`);
+      } catch (err) {
+        failures++;
+        console.error(`FAIL  ${file}`);
+        console.error(`      ${err instanceof Error ? err.message : String(err)}`);
+      }
+    }
+  } finally {
+    await pool.end();
+  }
+
+  console.log(`\n${files.length - failures}/${files.length} record(s) ingested.`);
+  if (failures > 0) process.exit(1);
 }
