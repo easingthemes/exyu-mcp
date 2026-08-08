@@ -26,6 +26,12 @@ services:
       context: .
       dockerfile: Caddy.Dockerfile
     restart: unless-stopped
+    # Caddyfile uses `{$EXYU_DOMAIN:localhost}`; without this the placeholder
+    # always falls back to `localhost` and no real TLS/domain routing happens.
+    # Interpolated by Compose from `.env` (or the shell). Passed explicitly
+    # rather than via `env_file: .env` so the proxy never sees the app's API keys.
+    environment:
+      EXYU_DOMAIN: ${EXYU_DOMAIN:-localhost}
     ports:
       - "80:80"
       - "443:443"
