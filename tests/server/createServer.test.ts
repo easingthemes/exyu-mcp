@@ -54,5 +54,9 @@ describe('exyu MCP server end-to-end', () => {
     const text = (result.content as { type: 'text'; text: string }[])[0].text;
     const parsed = JSON.parse(text);
     expect(parsed.matches[0].ref.external_id).toBe('ref_valter_vazduh_trepti');
+    // Citations must survive the full MCP round-trip, not just the DB query.
+    expect(parsed.matches[0].ref.work.title).toBe('Valter brani Sarajevo');
+    expect(parsed.matches[0].ref.meaning).toBeTruthy();
+    expect(parsed.matches[0].ref.sources.length).toBeGreaterThan(0);
   });
 });

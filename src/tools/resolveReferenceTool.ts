@@ -32,16 +32,24 @@ interface CallToolResult {
   isError?: boolean;
 }
 
+/**
+ * Call-through-rate logging. Best-effort by design: this is a metrics side effect, so a
+ * failed INSERT must never cost the caller an otherwise-good match response.
+ */
 async function logCall(
   db: pg.Pool | pg.Client,
   query: string,
   matchedRefId: string | null,
   confidence: number | null
 ): Promise<void> {
-  await db.query(
-    `INSERT INTO tool_calls (query, matched_ref_id, confidence) VALUES ($1, $2, $3)`,
-    [query, matchedRefId, confidence]
-  );
+  try {
+    await db.query(
+      `INSERT INTO tool_calls (query, matched_ref_id, confidence) VALUES ($1, $2, $3)`,
+      [query, matchedRefId, confidence]
+    );
+  } catch (err) {
+    console.error('[resolve_reference] failed to log tool call (response unaffected):', err);
+  }
 }
 
 export async function handleResolveReference(
@@ -58,7 +66,10 @@ export async function handleResolveReference(
           type: 'text',
           text: JSON.stringify({
             matches: [],
-            note: 'No confident match found. Do not fabricate a source, speaker, or wording for this query.'
+            degraded: result.degraded ?? false,
+            note: result.degraded
+              ? 'A lookup leg was unavailable (provider error), so this is "could not check", not "does not exist". Do not fabricate a source, speaker, or wording for this query.'
+              : 'No confident match found. Do not fabricate a source, speaker, or wording for this query.'
           })
         }
       ]
