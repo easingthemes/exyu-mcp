@@ -1,6 +1,6 @@
 // src/tools/resolveReference.ts
 import pg from 'pg';
-import type { EmbeddingProvider } from '../providers/embedding.js';
+import { assertEmbeddingDimension, type EmbeddingProvider } from '../providers/embedding.js';
 
 export interface MatchCandidate {
   ref: { id: string; external_id: string; canonical_text: string; source_type: string; function: string };
@@ -82,6 +82,7 @@ export async function resolveReference(
   }
 
   const queryEmbedding = await deps.embedder.embed(query);
+  assertEmbeddingDimension(queryEmbedding);
   const vectorLiteral = `[${queryEmbedding.join(',')}]`;
   const vectorRes = await deps.db.query(
     `SELECT id, external_id, canonical_text, source_type, function,
