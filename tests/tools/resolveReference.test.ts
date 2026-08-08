@@ -67,6 +67,26 @@ describe('resolveReference', () => {
     expect(result.matches[0].leg).toBe('trigram');
   });
 
+  it('returns the fully-cited record, not just the matched text', async () => {
+    const result = await resolveReference('Vazduh gori ko da...', {
+      db: client as unknown as pg.Pool,
+      embedder: fakeEmbedder
+    });
+
+    const { ref } = result.matches[0];
+    expect(ref.work?.title).toBe('Valter brani Sarajevo');
+    expect(ref.work?.year).toBe(1972);
+    expect(ref.meaning).toBeTruthy();
+    expect(ref.meaning).toMatch(/partizan recognition password/i);
+    expect(ref.modern_usage).toBeTruthy();
+    expect(ref.emotional_tone).toEqual(['tense', 'ominous']);
+    expect(ref.speaker).toEqual({ name: 'unknown', confidence: 'low' });
+    expect(ref.extension?.call_response?.countersign).toBeTruthy();
+    expect(Array.isArray(ref.sources)).toBe(true);
+    expect(ref.sources.length).toBeGreaterThan(0);
+    expect(ref.sources[0]).toMatchObject({ source_id: 'yugonostalgia', license: 'unknown', field: 'work' });
+  });
+
   it('returns no matches for a completely unrelated query', async () => {
     const result = await resolveReference('completely unrelated query text xyz', {
       db: client as unknown as pg.Pool,
@@ -74,5 +94,23 @@ describe('resolveReference', () => {
     });
 
     expect(result.matches).toEqual([]);
+  });
+
+  it('degrades instead of throwing when the embedding provider is down', async () => {
+    const brokenEmbedder: EmbeddingProvider = {
+      embed: vi.fn().mockRejectedValue(new Error('embedding API unreachable'))
+    };
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    // Trigram and FTS both miss, so the cascade falls through to the vector leg.
+    const result = await resolveReference('completely unrelated query text xyz', {
+      db: client as unknown as pg.Pool,
+      embedder: brokenEmbedder
+    });
+
+    expect(result.matches).toEqual([]);
+    expect(result.degraded).toBe(true);
+    expect(consoleError).toHaveBeenCalled();
+    consoleError.mockRestore();
   });
 });
